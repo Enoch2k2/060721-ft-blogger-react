@@ -1,5 +1,5 @@
 
-const BlogCard = ({ blog: { title, author, content} }) => {
+const BlogCard = ({ blog: { title, author, content } }) => {
   return (
     <div>
       <h4>{ title }</h4>
