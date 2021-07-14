@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from './components/NavBar';
 import BlogForm from './components/BlogForm';
 import BlogList from './components/BlogList';
 
 function App() {
-  const [ blogs, setBlogs ] = useState([
-    { title: "title 1", author: "author 1", content: "content 1" },
-    { title: "title 2", author: "author 2", content: "content 2" },
-    { title: "title 3", author: "author 3", content: "content 3" },
-    { title: "title 4", author: "author 4", content: "content 4" },
-    { title: "title 5", author: "author 5", content: "content 5" }
-  ])
+  const [ blogs, setBlogs ] = useState([])
+
+  useEffect(() => {
+    // fetch our blogs
+    fetch('http://localhost:3001/blogs')
+      .then(resp => resp.json())
+      .then(blogs => setBlogs(blogs))
+  }, [])
 
   const addBlog = blog => {
-    const newBlogs = [...blogs, blog];
-    setBlogs(newBlogs);
+
+    fetch('http://localhost:3001/blogs', {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify( blog )
+    })
+      .then(resp => resp.json())
+      .then(blog => {
+        const newBlogs = [...blogs, blog];
+        setBlogs(newBlogs);
+      })
   }
 
   return (
@@ -26,6 +39,7 @@ function App() {
       <BlogForm addBlog={ addBlog } header="Create Blog!!!!!" />
 
       <BlogList blogs={ blogs } />
+
 
       <footer>Blogger Componany Inc. All rights reserved.</footer>
     </div>
