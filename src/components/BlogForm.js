@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const BlogForm = ({ addBlog, header }) => {
+const BlogForm = ({ addBlog, header, history, match, location }) => {
   const [ blog, setBlog ] = useState({
     title: '',
     content: '',
@@ -16,8 +16,10 @@ const BlogForm = ({ addBlog, header }) => {
 
   const handleSubmit = event => {
     event.preventDefault();
-
-    addBlog(blog)
+    console.log('history', history)
+    console.log('match', match)
+    console.log('location', location)
+    addBlog(blog, history)
     
     setBlog({
       title: '',

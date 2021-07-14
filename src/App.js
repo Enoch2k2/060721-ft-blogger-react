@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import BlogForm from './components/BlogForm';
 import BlogList from './components/BlogList';
+import Blog from './components/Blog';
 
 function App() {
   const [ blogs, setBlogs ] = useState([])
@@ -13,7 +15,7 @@ function App() {
       .then(blogs => setBlogs(blogs))
   }, [])
 
-  const addBlog = blog => {
+  const addBlog = (blog, history) => {
 
     fetch('http://localhost:3001/blogs', {
       method: "POST",
@@ -27,22 +29,52 @@ function App() {
       .then(blog => {
         const newBlogs = [...blogs, blog];
         setBlogs(newBlogs);
+        history.push('/blogs')
       })
   }
 
   return (
-    <div className="App">
-      <NavBar />
+    <Router>
+      <div className="App">
 
-      <h1>Welcome to Blogger</h1>
+        <NavBar />
 
-      <BlogForm addBlog={ addBlog } header="Create Blog!!!!!" />
+        <h1>Welcome to Blogger</h1>
+        <Switch>
+          <Route 
+            exact path="/"
+            render={ 
+              (props) => <BlogList { ...props } blogs={ blogs } />
+            }
+          />
+          <Route 
+            exact path="/blogs"
+            render={ 
+              (props) => <BlogList { ...props } blogs={ blogs } />
+            }
+          />
+          <Route 
+            exact path="/blogs/new"
+            render={
+              (props) => <BlogForm 
+                          { ...props }
+                          addBlog={ addBlog }
+                          header="Create Blog!!!!!"
+                        /> 
+            }
+          />
+          <Route
+            exact path="/blogs/:id"
+            component={ Blog }
+          />
 
-      <BlogList blogs={ blogs } />
-
-
-      <footer>Blogger Componany Inc. All rights reserved.</footer>
-    </div>
+          <Route
+            render={() => <h1>Page Not Found</h1>}
+          />
+        </Switch>
+        <footer>Blogger Componany Inc. All rights reserved.</footer>
+      </div>
+    </Router>
   );
 }
 

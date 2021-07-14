@@ -1,10 +1,10 @@
+import { NavLink } from 'react-router-dom';
 
-const BlogCard = ({ blog: { title, author, content } }) => {
+const BlogCard = ({ blog: { id, title } }) => {
+  console.log('id', id)
   return (
     <div>
-      <h4>{ title }</h4>
-      <p>By: { author }</p>
-      <p>{ content }</p>
+      <h4><NavLink to={`/blogs/${id}`}>{ title }</NavLink></h4>
     </div>
   )
 }
